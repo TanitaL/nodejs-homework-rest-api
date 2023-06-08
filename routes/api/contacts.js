@@ -11,7 +11,7 @@ const addScheme = Joi.object({
   phone: Joi.string().required(),
 });
 
-router.get('/', async (res, next) => {
+router.get('/', async (req, res, next) => {
   try {
     const contactsList = await contacts.listContacts();
     res.status(200).json(contactsList);
