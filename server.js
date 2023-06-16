@@ -6,6 +6,7 @@ dotenv.config({ path: './.env' });
 
 const { MONGO_DB } = process.env;
 
+mongoose.set("strictQuery", true);
 
 mongoose.connect(MONGO_DB)
   .then(() => {

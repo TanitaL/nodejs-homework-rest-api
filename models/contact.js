@@ -1,4 +1,5 @@
 const { Schema, model } = require("mongoose");
+const Joi = require("joi");
 
 const contactSchema = new Schema({
     name: {
@@ -15,8 +16,26 @@ const contactSchema = new Schema({
         type: Boolean,
         default: false,
     },
+}, { versionKey: false, timestamps: true });
+
+contactSchema.post("save", (error, data, next) => {
+    error.status = 400;
+    next();
 });
 
-const Contact = model("contacts", contactSchema);
+const schemaJoi = Joi.object({
+    name: Joi.string().required(),
+    email: Joi.string().required(),
+    phone: Joi.string().required(),
+    favorite: Joi.boolean(),
+});
 
-module.exports = Contact;
+const updateFavoriteSchema = Joi.object({
+    favorite: Joi.boolean()
+        .messages({ "any.required": "missing field favorite", })
+        .required(),
+});
+
+const Contact = model("contact", contactSchema);
+
+module.exports = { Contact, schemaJoi, updateFavoriteSchema };
