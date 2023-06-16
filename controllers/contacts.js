@@ -3,9 +3,9 @@ const Contact = require("../models/contact");
 
 
 
-const listContacts = async () => {
+const listContacts = async (req, res) => {
   const contactsList = await Contact.find();
-  return JSON.parse(contactsList);
+  res.json(contactsList);
 }
 
 // const getContactById = async (id) => {
