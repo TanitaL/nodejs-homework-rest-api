@@ -1,8 +1,12 @@
 const app = require('./app');
 const mongoose = require("mongoose");
+const dotenv = require('dotenv');
 
-const DB_HOST = "mongodb+srv://Tetiana:quzTACc8SpWCiQ3t@cluster0.zxp2v4i.mongodb.net/db-contacts?retryWrites=true&w=majority"
-mongoose.connect(DB_HOST)
+dotenv.config({ path: './.env' });
+
+const {MONGO_DB} = process.env
+
+mongoose.connect(MONGO_DB)
   .then(() => {
     console.log("Database connection successful");
     app.listen(4000, () => { console.log("Server running. Use our API on port: 4000") });
