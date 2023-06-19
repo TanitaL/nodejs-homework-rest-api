@@ -3,7 +3,9 @@ const { Contact } = require("../models/contact");
 
 
 const listContacts = async (req, res) => {
-  const contactsList = await Contact.find();
+  const { _id: owner } = req.user;
+
+  const contactsList = await Contact.find({owner});
   res.json(contactsList);
 };
 
@@ -26,7 +28,8 @@ const removeContact = async (req, res) => {
 };
 
 const addContact = async (req, res) => {
-  const newContact = await Contact.create(req.body);
+  const { _id: owner } = req.user;
+  const newContact = await Contact.create({ ...req.body, owner });
   res.status(201).json(newContact);
 };
 
