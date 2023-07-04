@@ -4,38 +4,47 @@ const Joi = require("joi");
 // eslint-disable-next-line no-useless-escape
 const emailRegex = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
 
-const userSchema = new Schema({
+const userSchema = new Schema(
+  {
     password: {
       type: String,
-      required: [true, 'Set password for user'],
+      required: [true, "Set password for user"],
       minlength: 6,
     },
     email: {
       type: String,
-      required: [true, 'Email is required'],
+      required: [true, "Email is required"],
       unique: true,
-      match: emailRegex
+      match: emailRegex,
     },
     subscription: {
       type: String,
       enum: ["starter", "pro", "business"],
-      default: "starter"
+      default: "starter",
     },
     token: String,
     avatarURL: {
       type: String,
-      required: true
-    }
-}, { versionKey: false, timestamps: true });
-
+      required: true,
+    },
+    verify: {
+      type: Boolean,
+      default: false,
+    },
+    verificationToken: {
+      type: String,
+      required: [true, "Verify token is required"],
+    },
+  },
+  { versionKey: false, timestamps: true }
+);
 
 userSchema.post("save", (error, data, next) => {
   const { name, code } = error;
-  const status = (name === "mongoServerError" && code === 11000) ? 409 : 400;
+  const status = name === "mongoServerError" && code === 11000 ? 409 : 400;
   error.status = status;
   next();
 });
-
 
 const registerSchemaJoi = Joi.object({
   password: Joi.string()
@@ -58,7 +67,6 @@ const subscriptionSchemaJoi = Joi.object({
 });
 
 const User = model("user", userSchema);
-
 
 module.exports = {
   User,
