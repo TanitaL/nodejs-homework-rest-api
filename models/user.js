@@ -57,6 +57,12 @@ const registerSchemaJoi = Joi.object({
   token: Joi.string(),
 });
 
+const emailSchema = Joi.object({
+  email: Joi.string()
+    .messages({ "any.required": "missing field - email" })
+    .required(),
+});
+
 const loginSchemaJoi = Joi.object({
   email: Joi.string().pattern(emailRegex).required(),
   password: Joi.string().required(),
@@ -71,6 +77,7 @@ const User = model("user", userSchema);
 module.exports = {
   User,
   registerSchemaJoi,
+  emailSchema,
   loginSchemaJoi,
   subscriptionSchemaJoi,
 };
